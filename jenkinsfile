@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     stages {
+
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/2025sl93051/labsheet1-2025sl93051.git'
@@ -11,12 +12,31 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'echo Build Stage'
+                sh 'python3 --version'
             }
         }
 
         stage('Test') {
             steps {
-                sh 'python3 calculator.py'
+                sh '''
+                python3 - <<EOF
+import calculator
+
+print("Testing add...")
+assert calculator.add(2, 3) == 5
+
+print("Testing multiply...")
+assert calculator.multiply(2, 3) == 6
+
+print("Testing divide...")
+assert calculator.divide(6, 3) == 2
+
+print("Testing subtract...")
+assert calculator.subtract(5, 3) == 2
+
+print("All tests passed successfully")
+EOF
+                '''
             }
         }
 
